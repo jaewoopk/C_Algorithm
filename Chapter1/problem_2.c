@@ -17,7 +17,7 @@ void findAndAddNode(t_tree *tree, t_node *node, int data, int l, int r);
 void getTreeData(t_node *node);
 
 int main(void) {
-    int n;
+    int n, s;
     scanf(" %d", &n);
 
     t_tree *tree = (t_tree *)malloc(sizeof(t_tree));
@@ -26,7 +26,27 @@ int main(void) {
         int data, l, r;
         scanf(" %d %d %d",&data,&l,&r);
         findAndAddNode(tree, tree->root, data, l , r);
-        getTreeData(tree->root);
+        //getTreeData(tree->root);
+    }
+    scanf(" %d", &s);
+    for (int i = 0; i < s; i++) {
+        t_node *tmp = tree->root;
+        int j = 0;
+        char arr[101];
+        scanf(" %s", arr);
+        printf(" %d", tmp->data);
+
+        while (arr[j]) {
+            if (arr[j] == 'L') {
+                tmp = tmp->left;
+            }
+            else if (arr[j] == 'R') {
+                tmp = tmp->right;
+            }
+            printf(" %d", tmp->data);
+            j++;
+        }
+        printf("\n");
     }
     return 0;
 }
@@ -43,7 +63,7 @@ void findAndAddNode(t_tree *tree, t_node *node, int data, int l, int r) {
     if (whereNode->right) {
         findAndAddNode(tree, node->right, data, l, r);
     }
-    if (!whereNode->left && !whereNode->right && whereNode->data != data) {
+    if (whereNode->data == data) {
         if (l) {
             t_node *newNode_left = (t_node *)malloc(sizeof(t_node));
             newNode_left->data = l;
@@ -57,7 +77,7 @@ void findAndAddNode(t_tree *tree, t_node *node, int data, int l, int r) {
         whereNode->data = data;
         return ;
     }
-    else if (whereNode->data == data) {
+    if (!whereNode->left && !whereNode->right && whereNode->data != data && whereNode == tree->root) {
         if (l) {
             t_node *newNode_left = (t_node *)malloc(sizeof(t_node));
             newNode_left->data = l;
