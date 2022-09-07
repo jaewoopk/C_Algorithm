@@ -26,7 +26,7 @@ int main(void) {
         int data, l, r;
         scanf(" %d %d %d",&data,&l,&r);
         findAndAddNode(tree, tree->root, data, l , r);
-        //getTreeData(tree->root);
+        getTreeData(tree->root);
     }
     scanf(" %d", &s);
     for (int i = 0; i < s; i++) {
