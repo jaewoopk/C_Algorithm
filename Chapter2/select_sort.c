@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #pragma warning(disable:4996)
 
-void insertion(int* arr, int idx) {
+void select(int* arr, int idx) {
     int max = arr[0], id = 0, tmp;
     for (int i = 0; i <= idx; i++) {
         if (arr[i] > max) {
@@ -24,7 +24,7 @@ int main(void) {
         scanf("%d",&arr[i]);
     }
     for (int i = 0; i < n; i++) {
-        insertion(arr, n - i - 1);
+        select(arr, n - i - 1);
     }
     for (int i = 0; i < n; i++) {
         printf("%d ",arr[i]);
