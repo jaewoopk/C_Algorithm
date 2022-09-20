@@ -5,7 +5,6 @@
 
 void select(int *arr, int idx);
 void insertion(int *arr, int idx);
-void before_idx_sort(int *arr, int start, int end);
 
 int main(void) {
 	int n;
@@ -32,18 +31,18 @@ int main(void) {
 
     end = clock();
     result = (double)(end - start);
-    printf("select sort == > %6lf\n", result / CLOCKS_PER_SEC); //결과 출력
+    printf("%.9lfms\n", result / CLOCKS_PER_SEC); //결과 출력
 
     start = clock();
 
-	for (int i = 0; i < n - 1; i++) {
-		insertion(B, i  + 1);
+	for (int i = 1; i < n; i++) {
+		insertion(B, i);
 	}
 
     end = clock();
 
     result = (double)(end - start);
-    printf("insertion sort == > %6lf", result / CLOCKS_PER_SEC); //결과 출력
+    printf("%.9lfms\n", result / CLOCKS_PER_SEC); //결과 출력
 
 	free(A);
 	free(B);
@@ -65,18 +64,9 @@ void select(int *arr, int idx) {
 
 void insertion(int *arr, int idx) {
 	int save = arr[idx];
-	for (int i = 0; i < idx; i++) {
-		if (arr[idx] > arr[i]) continue;
-		else {
-			before_idx_sort(arr, i, idx);
-			arr[i] = save;
-			break ;
-		}
+    int i;
+	for (i = idx - 1; i >= 0 && arr[i] > save; i--) {
+		arr[i + 1] = arr[i];
 	}
-}
-
-void before_idx_sort(int *arr, int start, int end) {
-	for (int i = end; i > start; i--) {
-		arr[i] = arr[i - 1];
-	}
+    arr[i + 1] = save;
 }

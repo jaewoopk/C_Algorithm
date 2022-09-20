@@ -2,22 +2,13 @@
 #include <stdlib.h>
 #pragma warning(disable:4996)
 
-void before_idx_sort(int *arr, int start, int end) {
-    for (int i = end; i > start; i--) {
-        arr[i] = arr[i - 1];
-    }
-}
-
-void insertion(int* arr, int idx) {
-    int save = arr[idx];
-    for (int i = 0; i < idx; i++) {
-        if (arr[idx] > arr[i]) continue;
-        else {
-            before_idx_sort(arr, i, idx);
-            arr[i] = save;
-            break ;
-        }
-    }
+void insertion(int *arr, int idx) {
+	int save = arr[idx];
+    int i;
+	for (i = idx - 1; i >= 0 && arr[i] > save; i--) {
+		arr[i + 1] = arr[i];
+	}
+    arr[i + 1] = save;
 }
 
 int main(void) {
