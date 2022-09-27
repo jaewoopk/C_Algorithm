@@ -14,8 +14,6 @@ void printHeap();
 int main(void) {
     int k;
     while (1) {
-        if (n >= 100)
-            exit(0);
         char ch;
         scanf("%c",&ch);
         getchar();
@@ -51,13 +49,14 @@ void insertItem(int key) {
 int removeMax() {
     int tmp = H[1];
     H[1] = H[n - 1];
+    H[n - 1] = 0;
     downHeap(1);
     n--;
     return (tmp);
 }
 
 void upHeap(int i) {
-    if (i == 1) return ;
+    if (i <= 1) return ;
     else if (H[i] > H[i / 2]) {
         int tmp = H[i];
         H[i] = H[i / 2];
@@ -68,22 +67,26 @@ void upHeap(int i) {
 
 void downHeap(int i) {
     if (i * 2 >= n) return ;
-    printHeap();
-    if (H[i] < H[(i * 2) + 1]) {
-        int tmp = H[i];
-        H[i] = H[(i * 2) + 1];
-        H[(i * 2) + 1] = tmp;
-        downHeap((i * 2) + 1);
+    if (H[i * 2] > H[(i * 2) + 1]) {
+        if (H[i] < H[i * 2]) {
+            int tmp = H[i];
+            H[i] = H[i * 2];
+            H[i * 2] = tmp;
+            downHeap(i * 2);
+        }
     }
-    if (H[i] < H[i * 2]) {
-        int tmp = H[i];
-        H[i] = H[i * 2];
-        H[i * 2] = tmp;
-        downHeap(i * 2);
+    else {
+        if (H[i] < H[(i * 2) + 1]) {
+            int tmp = H[i];
+            H[i] = H[(i * 2) + 1];
+            H[(i * 2) + 1] = tmp;
+            downHeap((i * 2) + 1);
+        }
     }
 }
 
 void printHeap() {
+    if (n <= 1) return ;
     for (int i = 1; i < n; i++) {
         printf(" %d",H[i]);
     }
