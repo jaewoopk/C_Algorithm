@@ -5,7 +5,7 @@
 int H[100];
 int n = 1;
 
-void upHeap(int i);
+void buildHeap();
 void downHeap(int i);
 void printHeap();
 
@@ -16,20 +16,14 @@ int main(void) {
         scanf(" %d",&H[i]);
     }
 
-    for (int i = 1; i < n; i++) {
-        downHeap(i);
-        printHeap();
-    }
+    buildHeap();
+    printHeap();
     return (0);
 }
 
-void upHeap(int i) {
-    if (i <= 1) return ;
-    else if (H[i] > H[i / 2]) {
-        int tmp = H[i];
-        H[i] = H[i / 2];
-        H[i / 2] = tmp;
-        upHeap(i / 2);
+void buildHeap() {
+    for (int i = n / 2; i > 0; i--) {
+        downHeap(i);
     }
 }
 
