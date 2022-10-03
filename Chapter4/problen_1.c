@@ -9,7 +9,7 @@ int T;
 void buildHeap();
 void inPlaceHeapSort();
 void downHeap(int i);
-void printHeap();
+void printArray();
 
 int main(void) {
     scanf("%d",&n);
@@ -20,7 +20,7 @@ int main(void) {
 
     buildHeap();
     inPlaceHeapSort();
-    printHeap();
+    printArray();
     return (0);
 }
 
@@ -69,7 +69,7 @@ void downHeap(int i) {
     }
 }
 
-void printHeap() {
+void printArray() {
     if (T <= 1) return ;
     for (int i = 1; i <= T; i++) {
         printf(" %d",H[i]);
