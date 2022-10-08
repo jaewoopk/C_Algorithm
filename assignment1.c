@@ -8,47 +8,52 @@ int length;
 
 int findKthSmallest(int *list, int n, int k);
 int *buildList(int n, int min, int max);
+void writeList(int *list);
 void downHeap(int *list, int n, int i);
 void inPlaceHeapSort(int *list, int n, int k);
 void upHeap(int *list, int i);
 
 int main(void) {
     srand(time(NULL));
-    int *list;
-    list = buildList(10, 1, 100);
-    
-    for (int i = 1; i < length + 1; i++) {
-        printf(" %d",list[i]);
-    }
+    int *list; // buildList로 만들어지는 1D배열인 int형 포인터 list
+    int *test_list; // findKthSmallest 함수를 사용할 때, list원형을 쓰기 위해 list로부터 memmove를 통해 복사받는 test_list
+    int output[4];
+    int karray[4] = {1, 100, 99900, 99999};
+    int e, t;
+    list = buildList(10, 1, 100); // build a list size 10
+    writeList(list); // write 10 elements in 1 lines
 
-    for (int i = 1; i <= 3; i++) {
-        int *test_list = (int *)malloc(sizeof(int) * (length + 1));
-        memmove(test_list, list, sizeof(int) * (length + 1));
-        printf("\n %d \n",findKthSmallest(test_list, 10, i));
+    for (int k = 1; k <= 3; k++) { // mini test runs
+        test_list = (int *)malloc(sizeof(int) * (length + 1));
+        memmove(test_list, list, sizeof(int) * (length + 1)); // 최근의 buildList를 통해 만들어진 배열을 쓰기 위해 memmove를 통해 배열 복사
+        output[k] = findKthSmallest(test_list, 10, k);
+        printf(" [k is %d, answer is %d] ", k, output[k]); // write 3 elements in 1 line
         free(test_list);
     }
     printf("\n");
-    for (int i = 1; i < length + 1; i++) {
-        printf(" %d",list[i]);
-    }
-    //findKthSmallest(list, 10, 2);
-    //findKthSmallest(list, 10, 3);
 
     free(list);
-    //list = buildList(100000, 1, 1000000);
+    list = buildList(100000, 1, 1000000); // build a list of size 100,000
 
-    //free(list);
+    for (int k = 0; k <= 3; k++) { // mini test runs
+        test_list = (int *)malloc(sizeof(int) * (length + 1));
+        memmove(test_list, list, sizeof(int) * (length + 1)); // 최근의 buildList를 통해 만들어진 배열을 쓰기 위해 memmove를 통해 배열 복사
+        e = findKthSmallest(test_list, 100000, karray[k]);
+        printf(" [e is %d, t is %d] ", e, output[k]); // write 3 elements in 1 line
+        free(test_list);
+    }
+    free(list);
     return (0);
 }
 
 int findKthSmallest(int *list, int n, int k) {
-    inPlaceHeapSort(list, n, k);
+    inPlaceHeapSort(list, n, k); // inPlaceHeapSort를 통해 list[n - k + 1]의 k번째 smallest 값을 도출한다.
     return list[n - k + 1];
 }
 
-int *buildList(int n, int min, int max) {
+int *buildList(int n, int min, int max) { // buildList에서 upHeap을 통해 오름차순 무순위배열을 만든다.
     int *arr = (int *)malloc(sizeof(int) * n + 1);
-    length = 0;
+    length = 0; // 전역변수 length를 통해 초기 배열의 길이를 알아낸다.
     for (int i = 1; i < n + 1; i++) {
         arr[i] = (rand() % (max - min)) + min;
         upHeap(arr, i);
@@ -57,11 +62,18 @@ int *buildList(int n, int min, int max) {
     return (arr);
 }
 
+void writeList(int *list) { // List의 요소들을 출력한다.
+    for (int i = 1; i < length + 1; i++) {
+        printf(" %d",list[i]);
+    }
+    printf("\n");
+}
+
 void inPlaceHeapSort(int *list, int n, int k) {
 	int tmp;
-    int T = n;
+    int T = n; // 변수 T에 기존 n의 값을 저장하여
 
-	for (int i = n; i >= T - k + 1; i--) {
+	for (int i = n; i >= T - k + 1; i--) { // T - k + 1까지 list의 첫 값을 가장 뒤로 보내고 오름차순 정렬을 시행한다.
 		tmp = list[1];
 		list[1] = list[i];
 		list[i] = tmp;
@@ -75,7 +87,7 @@ void inPlaceHeapSort(int *list, int n, int k) {
     }
 }
 
-void downHeap(int *list, int n, int i) {
+void downHeap(int *list, int n, int i) { // 기존의 downHeap 함수를 오름차순으로 바꾸었다.
     if (i * 2 >= n) return ;
     if (list[i * 2] < list[(i * 2) + 1]) {
         if (list[i] > list[i * 2]) {
@@ -95,7 +107,7 @@ void downHeap(int *list, int n, int i) {
     }
 }
 
-void upHeap(int *list, int i) {
+void upHeap(int *list, int i) { // 기존의 upHeap함수를 오름차순으로 바꾸었다.
     if (i <= 1) return ;
     else if (list[i] < list[i / 2]) {
         int tmp = list[i];
