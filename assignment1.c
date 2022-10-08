@@ -45,8 +45,9 @@ int main(void) {
         e = findKthSmallest(test_list, 100000, karray[k]);
         end = clock();
         t = (double)(end - start);
-        printf(" [e is %d, t is %f] ", e, t); // write 3 elements in 1 line
+        printf(" [e[%d] is %d, t is %.6f] ", k, e, (t / CLOCKS_PER_SEC)); // write 4 elements in 1 line
         free(test_list);
+        printf("\n");
     }
     free(list);
     return (0);
