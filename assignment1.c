@@ -14,12 +14,15 @@ void inPlaceHeapSort(int *list, int n, int k);
 void upHeap(int *list, int i);
 
 int main(void) {
-    srand(time(NULL));
+    clock_t start, end;
     int *list; // buildList로 만들어지는 1D배열인 int형 포인터 list
     int *test_list; // findKthSmallest 함수를 사용할 때, list원형을 쓰기 위해 list로부터 memmove를 통해 복사받는 test_list
     int output[4];
     int karray[4] = {1, 100, 99900, 99999};
-    int e, t;
+    int e;
+    double t;
+    srand(time(NULL));
+
     list = buildList(10, 1, 100); // build a list size 10
     writeList(list); // write 10 elements in 1 lines
 
@@ -38,8 +41,11 @@ int main(void) {
     for (int k = 0; k <= 3; k++) { // mini test runs
         test_list = (int *)malloc(sizeof(int) * (length + 1));
         memmove(test_list, list, sizeof(int) * (length + 1)); // 최근의 buildList를 통해 만들어진 배열을 쓰기 위해 memmove를 통해 배열 복사
+        start = clock();
         e = findKthSmallest(test_list, 100000, karray[k]);
-        printf(" [e is %d, t is %d] ", e, output[k]); // write 3 elements in 1 line
+        end = clock();
+        t = (double)(end - start);
+        printf(" [e is %d, t is %f] ", e, t); // write 3 elements in 1 line
         free(test_list);
     }
     free(list);
