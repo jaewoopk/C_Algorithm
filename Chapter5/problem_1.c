@@ -4,35 +4,38 @@
 
 typedef struct s_node {
     int data;
-    struct s_node *head;
     struct s_node *next;
 } t_node;
 
-void insertItems(t_node *list, int data);
+typedef struct s_list {
+    struct s_node *head;
+} t_list;
+
+void insertItems(t_list *list, int data);
 
 int main(void) {
     int n;
-    t_node *list = (t_node *)malloc(sizeof(t_node));
+    t_list *list = (t_list *)malloc(sizeof(t_list));
+    list->head = (t_node *)malloc(sizeof(t_node));
     t_node *tmp;
 
-    n = scanf(" %d",&n);
-    printf("n = %d\n",n);
-
+    scanf(" %d", &n);
+    
     for (int i = 0; i < n; i++) {
         int data;
-        data = scanf(" %d",&data);
-        printf("data = %d\n",data);
-        //insertItems(list, data);
+        scanf(" %d",&data);
+        insertItems(list, data);
     }
-    /*tmp = list->head;
+    tmp = list->head;
     while (tmp->next) {
         printf(" %d",tmp->next->data);
-    }*/
+        tmp = tmp->next;
+    }
     exit(0);
     return (0);
 }
 
-void insertItems(t_node *list, int data) {
+void insertItems(t_list *list, int data) {
     t_node *tmp = list->head;
     t_node *new_node = (t_node *)malloc(sizeof(t_node));
     new_node->data = data;
