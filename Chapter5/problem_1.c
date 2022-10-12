@@ -12,6 +12,9 @@ typedef struct s_list {
 } t_list;
 
 void insertItems(t_list *list, int data);
+void mergeSort(t_list *list);
+void merge(t_list *list1, t_list *list2);
+void partition(t_list *list,int k);
 
 int main(void) {
     int n;
@@ -45,4 +48,16 @@ void insertItems(t_list *list, int data) {
         tmp = tmp->next;
     }
     tmp->next = new_node;
+}
+
+void mergeSort(t_list *list) {
+
+}
+
+void merge(t_list *list1, t_list *list2) {
+
+}
+
+void partition(t_list *list, int k) {
+
 }
