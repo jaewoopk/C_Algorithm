@@ -13,8 +13,8 @@ typedef struct s_list {
 
 void insertItems(t_list *list, int data);
 void mergeSort(t_list *list);
-void merge(t_list *list1, t_list *list2);
-void partition(t_list *list,int k);
+t_list *merge(t_list *list1, t_list *list2);
+t_list *partition(t_list *list,int k);
 
 int main(void) {
     int n;
@@ -40,24 +40,50 @@ int main(void) {
 
 void insertItems(t_list *list, int data) {
     t_node *tmp = list->head;
-    t_node *new_node = (t_node *)malloc(sizeof(t_node));
-    new_node->data = data;
-    new_node->next = NULL;
+    t_node *newNode = (t_node *)malloc(sizeof(t_node));
+    newNode->data = data;
+    newNode->next = NULL;
 
     while(tmp->next) {
         tmp = tmp->next;
     }
-    tmp->next = new_node;
+    tmp->next = newNode;
 }
 
 void mergeSort(t_list *list) {
 
 }
 
-void merge(t_list *list1, t_list *list2) {
+t_list *merge(t_list *list1, t_list *list2) {
+    t_node *tmp1 = list1->head->next;
+    t_node *tmp2 = list2->head->next;
+    t_node *newTmpNode;
+    t_list *newList = (t_list *)malloc(sizeof(t_list));
+    newList->head = (t_node *)malloc(sizeof(t_node));
+    newTmpNode = newList->head;
 
+    while (tmp1 || tmp2) {
+        if (tmp2 == NULL || tmp1->data > tmp2->data) {
+            newTmpNode->next = tmp1;
+            tmp1 = tmp1->next;
+        }
+        else if (tmp1 == NULL && tmp1->data <= tmp2->data) {
+            newTmpNode->next = tmp2;
+            tmp2 = tmp2->next;
+        }
+        newTmpNode = newTmpNode->next;
+    }
+    return newList;
 }
 
-void partition(t_list *list, int k) {
+t_list *partition(t_list *list, int k) {
+    t_list *newList = (t_list *)malloc(sizeof(t_list));
+    t_node *tmp = list->head;
+    newList->head = (t_node *)malloc(sizeof(t_node));
 
+    for (int i = 0; i < k; i++) {
+        tmp = tmp->next;
+    }
+    newList->head->next = tmp;
+    return newList;
 }
