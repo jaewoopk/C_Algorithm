@@ -13,7 +13,7 @@ typedef struct s_list {
 
 void insertItems(t_list *list, int data);
 t_list *mergeSort(t_list *list);
-t_list *merge(t_list *list1, t_list *list2);
+t_list *merge(t_list *list1, t_list *list2, int k);
 t_list *partition(t_list *list,int k);
 
 int n;
@@ -30,6 +30,7 @@ int main(void) {
         scanf(" %d",&data);
         insertItems(list, data);
     }
+
     t_list *answer = mergeSort(list);
     tmp = answer->head;
     while (tmp->next) {
@@ -53,10 +54,28 @@ void insertItems(t_list *list, int data) {
 }
 
 t_list *mergeSort(t_list *list) {
+    t_list *tmp1 = partition(list, 4);
+    t_list *tmp2 = partition(list, 2);
+    t_list *tmp3 = partition(list, 6);
+    t_list *tmp4 = partition(list, 1);
+    t_list *tmp5 = partition(list, 3);
+    t_list *tmp6 = partition(list, 5);
+    t_list *tmp7 = partition(list, 7);
+    t_list *tmp8 = partition(list, 8);
     
+    t_list *ans1 = merge(tmp4, tmp2, 2);
+    t_list *ans2 = merge(tmp5, tmp1, 2);
+    t_list *ans3 = merge(tmp6, tmp3, 2);
+    t_list *ans4 = merge(tmp7, tmp8, 2);
+
+    t_list *answer1 = merge(ans1, ans2, 4);
+    t_list *answer2 = merge(ans3, ans4, 4);
+
+    t_list *real_answer = merge(answer1, answer2, 8);
+    return real_answer;
 }
 
-t_list *merge(t_list *list1, t_list *list2) {
+t_list *merge(t_list *list1, t_list *list2, int k) {
     t_node *tmp1 = list1->head->next;
     t_node *tmp2 = list2->head->next;
     t_node *newTmpNode;
@@ -64,12 +83,12 @@ t_list *merge(t_list *list1, t_list *list2) {
     newList->head = (t_node *)malloc(sizeof(t_node));
     newTmpNode = newList->head;
 
-    while (tmp1 || tmp2) {
-        if (tmp2 == NULL || tmp1->data > tmp2->data) {
+    for (int i = 0; i < k; i++) {
+        if (tmp2 == NULL || tmp1->data < tmp2->data) {
             newTmpNode->next = tmp1;
             tmp1 = tmp1->next;
         }
-        else if (tmp1 == NULL || tmp1->data <= tmp2->data) {
+        else if (tmp1 == NULL || tmp1->data >= tmp2->data) {
             newTmpNode->next = tmp2;
             tmp2 = tmp2->next;
         }
