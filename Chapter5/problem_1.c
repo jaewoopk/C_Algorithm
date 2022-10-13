@@ -13,8 +13,8 @@ typedef struct s_list {
 
 void insertItems(t_list *list, int data);
 void printList(t_list *list);
-t_list *mergeSort(t_list *list);
-t_list *merge(t_list *list1, t_list *list2, int k);
+t_list *mergeSort(t_list *list, int k);
+t_list *merge(t_list *list1, t_list *list2);
 t_list *partition(t_list *list,int k);
 
 int n;
@@ -32,7 +32,7 @@ int main(void) {
         insertItems(list, data);
     }
 
-    t_list *answer = mergeSort(list);
+    t_list *answer = mergeSort(list, n / 2);
     printList(answer);
     exit(0);
     return (0);
@@ -50,16 +50,20 @@ void insertItems(t_list *list, int data) {
     tmp->next = newNode;
 }
 
-t_list *mergeSort(t_list *list) {
-    t_list *list2;
-    list2 = partition(list, 4);
-    printList(list);
-    printf("\n----------\n");
-    printList(list2);
-    return list2;
+t_list *mergeSort(t_list *list, int k) {
+    if (k < 1)
+        return NULL;
+    t_list *list2, *tmp1, *tmp2;
+    t_list *answerList;
+    
+    list2 = partition(list, k);
+    tmp1 = mergeSort(list, k / 2);
+    tmp2 = mergeSort(list2, k / 2);
+    answerList = merge(list, list2);
+    return answerList;
 }
 
-t_list *merge(t_list *list1, t_list *list2, int k) {
+t_list *merge(t_list *list1, t_list *list2) {
     t_node *tmp1 = list1->head->next;
     t_node *tmp2 = list2->head->next;
     t_node *newTmpNode;
@@ -67,7 +71,7 @@ t_list *merge(t_list *list1, t_list *list2, int k) {
     newList->head = (t_node *)malloc(sizeof(t_node));
     newTmpNode = newList->head;
 
-    for (int i = 0; i < k; i++) {
+    while (tmp1 || tmp2) {
         if (tmp2 == NULL || tmp1->data < tmp2->data) {
             newTmpNode->next = tmp1;
             tmp1 = tmp1->next;
