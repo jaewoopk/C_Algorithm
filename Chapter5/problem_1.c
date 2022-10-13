@@ -12,12 +12,13 @@ typedef struct s_list {
 } t_list;
 
 void insertItems(t_list *list, int data);
-void mergeSort(t_list *list);
+t_list *mergeSort(t_list *list);
 t_list *merge(t_list *list1, t_list *list2);
 t_list *partition(t_list *list,int k);
 
+int n;
+
 int main(void) {
-    int n;
     t_list *list = (t_list *)malloc(sizeof(t_list));
     list->head = (t_node *)malloc(sizeof(t_node));
     t_node *tmp;
@@ -29,7 +30,8 @@ int main(void) {
         scanf(" %d",&data);
         insertItems(list, data);
     }
-    tmp = list->head;
+    t_list *answer = mergeSort(list);
+    tmp = answer->head;
     while (tmp->next) {
         printf(" %d",tmp->next->data);
         tmp = tmp->next;
@@ -50,8 +52,8 @@ void insertItems(t_list *list, int data) {
     tmp->next = newNode;
 }
 
-void mergeSort(t_list *list) {
-
+t_list *mergeSort(t_list *list) {
+    
 }
 
 t_list *merge(t_list *list1, t_list *list2) {
@@ -67,7 +69,7 @@ t_list *merge(t_list *list1, t_list *list2) {
             newTmpNode->next = tmp1;
             tmp1 = tmp1->next;
         }
-        else if (tmp1 == NULL && tmp1->data <= tmp2->data) {
+        else if (tmp1 == NULL || tmp1->data <= tmp2->data) {
             newTmpNode->next = tmp2;
             tmp2 = tmp2->next;
         }
