@@ -16,6 +16,7 @@ void printList(t_list *list);
 t_list *mergeSort(t_list *list, int k);
 t_list *merge(t_list *list1, t_list *list2);
 t_list *partition(t_list *list,int k);
+t_list *twoSort(t_list *list);
 
 int n;
 
@@ -31,8 +32,8 @@ int main(void) {
         scanf(" %d",&data);
         insertItems(list, data);
     }
-
-    t_list *answer = mergeSort(list, n / 2);
+    t_list *answer;
+    answer = mergeSort(list, n / 2);
     printList(answer);
     exit(0);
     return (0);
@@ -52,19 +53,24 @@ void insertItems(t_list *list, int data) {
 
 t_list *mergeSort(t_list *list, int k) {
     if (k < 1)
-        return list;
+        return twoSort(list);
     t_list *list2, *tmp1, *tmp2;
     t_list *answerList;
     
     list2 = partition(list, k);
-    //if (k % 2 == 0) {
-    tmp1 = mergeSort(list, k / 2);
-    tmp2 = mergeSort(list2, k / 2);
-    //}
-    //else {
-    //    tmp1 = mergeSort(list, k / 2);
-    //    tmp2 = mergeSort(list2, k / 2 + 1);
-    //}
+    if (k % 2 == 1){
+        tmp1 = mergeSort(list, k / 2);
+        if (k == 1) {
+            tmp2 = mergeSort(list2, k / 2);    
+        }
+        else {
+            tmp2 = mergeSort(list2, k / 2 + 1);
+        }
+    }
+    else {
+        tmp1 = mergeSort(list, k / 2);
+        tmp2 = mergeSort(list2, k / 2);
+    }
     answerList = merge(tmp1, tmp2);
     return answerList;
 }
@@ -122,4 +128,19 @@ void printList(t_list *list) {
         printf(" %d",tmp->data);
         tmp = tmp->next;
     }
+}
+
+t_list *twoSort(t_list *list) {
+    t_node *tmp1 = list->head->next;
+    if (tmp1 == NULL)
+        return list;
+    t_node *tmp2 = list->head->next->next;
+    if (tmp2 == NULL)
+        return list;
+    if (tmp1->data > tmp2->data) {
+        tmp1->next = NULL;
+        list->head->next = tmp2;
+        tmp2->next = tmp1;
+    }
+    return list;
 }
