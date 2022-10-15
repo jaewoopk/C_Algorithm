@@ -1,7 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-
 #pragma warning(disable:4996)
 
 typedef struct s_node {
@@ -23,7 +21,6 @@ t_list *twoSort(t_list *list);
 int n;
 
 int main(void) {
-    srand(time(NULL));
     t_list *list = (t_list *)malloc(sizeof(t_list));
     list->head = (t_node *)malloc(sizeof(t_node));
     t_node *tmp;
@@ -32,12 +29,11 @@ int main(void) {
     
     for (int i = 0; i < n; i++) {
         int data;
-        data = rand() % 20000;
-        //scanf(" %d",&data);
+        scanf(" %d",&data);
         insertItems(list, data);
     }
     t_list *answer;
-    answer = mergeSort(list, n / 2);
+    answer = mergeSort(list, n);
     printList(answer);
     exit(0);
     return (0);
@@ -61,7 +57,7 @@ t_list *mergeSort(t_list *list, int k) {
     t_list *list2, *tmp1, *tmp2;
     t_list *answerList;
     
-    list2 = partition(list, k);
+    list2 = partition(list, k / 2);
     if (k % 2 == 1){
         tmp1 = mergeSort(list, k / 2);
         if (k == 1) {
@@ -91,16 +87,12 @@ t_list *merge(t_list *list1, t_list *list2) {
         if (tmp1 == NULL) {
             newTmpNode->next = tmp2;
             tmp2 = tmp2->next;
-            newTmpNode = newTmpNode->next;
-            continue ;
         }
         else if (tmp2 == NULL) {
             newTmpNode->next = tmp1;
             tmp1 = tmp1->next;
-            newTmpNode = newTmpNode->next;
-            continue ;
         }
-        if (tmp1->data < tmp2->data) {
+        else if (tmp1->data < tmp2->data) {
             newTmpNode->next = tmp1;
             tmp1 = tmp1->next;
         }
@@ -119,13 +111,8 @@ t_list *partition(t_list *list, int k) {
     t_list *newList = (t_list *)malloc(sizeof(t_list));
     newList->head = (t_node *)malloc(sizeof(t_node));
 
-    for (int i = 0; i < k - 1; i++) {
+    for (int i = 0; i < k- 1; i++) {
         tmp = tmp->next;
-    }
-    if (!tmp) {
-        free(newList->head);
-        free(newList);
-        return(list);
     }
     newList->head->next = tmp->next;
     tmp->next = NULL;
