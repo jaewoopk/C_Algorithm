@@ -14,6 +14,7 @@ int main(void) {
     srand(time(NULL));
     scanf(" %d", &n);
     int *arr = (int *)malloc(sizeof(int) * n);
+
     for (int i = 0; i < n; i++) {
         scanf(" %d", arr + i);
     }
@@ -32,43 +33,45 @@ void printArr(int *array) {
 void inPlaceQuickSort(int *array, int l, int r) {
     if (l >= r)
         return ;
-    int k, a, tmp;
+    
+    int k, a, b, tmp;
 
     k = findPivot(array, l, r);
-    a = inPlacePartion(array, l, r, array[k]);
+    a = b = inPlacePartion(array, l, r, array[k]);
     tmp = array[k];
     array[k] = array[a];
     array[a] = tmp;
     inPlaceQuickSort(array, l, a - 1);
-    inPlaceQuickSort(array, a + 1, r);
+    inPlaceQuickSort(array, b + 1, r);
 }
 
 int findPivot(int *array, int l, int r) {
-    return (rand() % (r - l) + l);
+    //int q = rand() % (r - l) + l;
+    return (l);
 }
 
-int inPlacePartion(int *array, int l, int r, int k) {
+int inPlacePartion(int *array, int l, int r, int pivot) {
     int tmp;
-    if (l >= r) {
+    if (l > r) {
         return r;
     }
 
-    if (array[l] <= k && array[r] <= k) {
+    if (array[l] <= pivot && array[r] <= pivot) {
         l++;
     }
-    else if (array[l] <= k && array[r] > k) {
+    else if (array[l] <= pivot && array[r] > pivot) {
         l++;
         r--;
     }
-    else if (array[l] > k && array[r] <= k) {
+    else if (array[l] > pivot && array[r] <= pivot) {
         tmp = array[l];
         array[l] = array[r];
         array[r] = tmp;
         l++;
         r--;
     }
-    else if (array[l] > k && array[r] > k) {
+    else if (array[l] > pivot && array[r] > pivot) {
         r--;
     }
-    return inPlacePartion(array, l, r, k);
+    return inPlacePartion(array, l, r, pivot);
 }
