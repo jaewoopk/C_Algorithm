@@ -4,7 +4,7 @@
 #include <string.h>
 #pragma warning(disable:4996)
 
-int n = 10;
+int n = 100000;
 int Limits[] = {1, 100, 500, 1000};
 char mode[] = {'a', 'b', 'c', 'd'};
 
@@ -17,28 +17,27 @@ int inPlacePartion(int *array, int l, int r, int k);
 int findPivot(int *array, int l, int r, int m);
 int findIndexOfMedianOfThree(int a, int b, int c);
 void swap(int *array, int i, int j);
+void arrayCopy(int *dest, int *src);
 
 int main(void) {
     clock_t start, end;
-    int e;
-    double t;
     int *arr = createArray();
     srand(time(NULL));
-
+    printf("Limit\t결정적1\t\t결정적3\t\t무작위1\t\t무작위3\n");
     for (int i = 0; i < 4; i++) {
-        int *test_arr;
+        int *test_arr = (int *)malloc(sizeof(int) * n); // test_arr을 통해 quickSort 진행
+        printf("%d\t",Limits[i]);
         for (int j = 0; j < 4; j++) {
-            memcpy(test_arr, arr, sizeof(int) * (n + 1));
+            arrayCopy(test_arr, arr);
             start = clock();
             quickSort(test_arr, i, j);
             end = clock();
-
-            t = (double)(end - start);
-            printf(" [clock is %d, t is %.6f] ", e, (t / CLOCKS_PER_SEC)); // write 4 elements in 1 line
-            
+            printf("%.8lf\t",((double)end - (double)start) / CLOCKS_PER_SEC); // 시간 재기
         }
+        printf("\n");
+        free(test_arr);
     }
-    exit(0);
+    free(arr);
     return (0);
 }
 
@@ -52,8 +51,8 @@ int *createArray() {
 }
 
 void quickSort(int *array, int i, int m) {
-    rQuickSort(array, 0, n - 1, i, m);
-    if (Limits[i] > 1) {
+    rQuickSort(array, 0, n - 1, i, m); // i는 Limits의 index를, m은 mode의 index를 나타낸다.
+    if (Limits[i] > 1) { // Limits가 1일 때는 Quicksort만, 1이 아닐 때는 선택정렬과 혼합한다.
         for (int j = 0; j < n - 1; j++) {
             insertionSort(array, j + 1);
         }
@@ -67,9 +66,9 @@ void printArr(int *array) {
 }
 
 int findPivot(int *array, int l, int r, int m) {
-    if (mode[m] == 'a')
+    if (mode[m] == 'a') // 결정적 1
         return (r);
-    if (mode[m] == 'c')
+    if (mode[m] == 'c') // 무작위 1
         return ((rand() % (r - l) + l));
     if (r - l == 1)
         return (l);
@@ -77,13 +76,13 @@ int findPivot(int *array, int l, int r, int m) {
     int a, b, c;
 
     switch (mode[m]) {
-    case 'b':
+    case 'b': // 결정적 3
         a = l;
         b = (l + r) / 2;
         c = r;
         break;
     
-    case 'd':
+    case 'd': // 무작위 3
         a = rand() % (r - l) + l;
         b = rand() % (r - l) + l;
         c = rand() % (r - l) + l;
@@ -119,8 +118,8 @@ int inPlacePartion(int *array, int l, int r, int pivot) {
 }
 
 void rQuickSort(int *array, int l, int r, int i, int m) {
-    if (r - l >= Limits[i]) {
-        if (l >= r)
+    if (r - l >= Limits[i]) { // r - l 이 Limits[i]보다 크거나 같을 경우만 작동하여
+        if (l >= r)           // 어느 정도 정렬이 이루어진 상태에서 선택정렬을 혼합한다.
             return ;
         int k, a, b;
         
@@ -133,7 +132,7 @@ void rQuickSort(int *array, int l, int r, int i, int m) {
     }
 }
 
-void insertionSort(int *array, int idx) {
+void insertionSort(int *array, int idx) { // 선택정렬
 	int save = array[idx];
     int i;
 	for (i = idx - 1; i >= 0 && array[i] > save; i--) {
@@ -152,4 +151,10 @@ void swap(int *array, int i, int j) {
     tmp = array[i];
     array[i] = array[j];
     array[j] = tmp;
+}
+
+void arrayCopy(int *dest, int *src) {
+    for (int i = 0; i < n; i++) {
+        dest[i] = src[i];
+    }
 }
