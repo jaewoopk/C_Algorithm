@@ -4,36 +4,39 @@
 #include <string.h>
 #pragma warning(disable:4996)
 
-int n = 100000;
+int n = 10;
 int Limits[] = {1, 100, 500, 1000};
-char *mode[] = {"deterministic1", "deterministic3",
-                "randomized1", "randomized3"};
+char mode[] = {'a', 'b', 'c', 'd'};
 
 int *createArray();
 void printArr();
-void printCPUtime();
-void quickSort(int *array);
-void rQuickSort(int *array, int l, int r);
-void inPlaceQuickSort(int *array, int l, int r);
+void quickSort(int *array, int i, int m);
+void rQuickSort(int *array, int l, int r, int i, int m);
+void insertionSort(int *array, int idx);
 int inPlacePartion(int *array, int l, int r, int k);
-int findPivot(int *array, int l, int r);
+int findPivot(int *array, int l, int r, int m);
 int findIndexOfMedianOfThree(int a, int b, int c);
 void swap(int *array, int i, int j);
 
 int main(void) {
-    srand(time(NULL));
+    clock_t start, end;
+    int e;
+    double t;
     int *arr = createArray();
+    srand(time(NULL));
 
     for (int i = 0; i < 4; i++) {
+        int *test_arr;
         for (int j = 0; j < 4; j++) {
-            int *test_arr;
-            memmove(test_arr, arr, sizeof(int) * (n + 1));
-            quickSort(test_arr);
-            printCPUtime();
-            mode++;
+            memcpy(test_arr, arr, sizeof(int) * (n + 1));
+            start = clock();
+            quickSort(test_arr, i, j);
+            end = clock();
+
+            t = (double)(end - start);
+            printf(" [clock is %d, t is %.6f] ", e, (t / CLOCKS_PER_SEC)); // write 4 elements in 1 line
+            
         }
-        Limits++;
-        mode -= 4;
     }
     exit(0);
     return (0);
@@ -43,9 +46,18 @@ int *createArray() {
     int *newArray = (int *)malloc(sizeof(int) * n);
 
     for (int i = 0; i < n; i++) {
-        newArray[i] = rand() % (n - 1) + 1;
+        newArray[i] = rand() % (n * 30 - 1) + 1;
     }
     return newArray;
+}
+
+void quickSort(int *array, int i, int m) {
+    rQuickSort(array, 0, n - 1, i, m);
+    if (Limits[i] > 1) {
+        for (int j = 0; j < n - 1; j++) {
+            insertionSort(array, j + 1);
+        }
+    }
 }
 
 void printArr(int *array) {
@@ -54,39 +66,24 @@ void printArr(int *array) {
     }
 }
 
-void inPlaceQuickSort(int *array, int l, int r) {
-    if (l >= r)
-        return ;
-    
-    int k, a, b, tmp;
-
-    k = findPivot(array, l, r);
-    a = b = inPlacePartion(array, l, r, array[k]);
-    tmp = array[k];
-    array[k] = array[a];
-    array[a] = tmp;
-    inPlaceQuickSort(array, l, a - 1);
-    inPlaceQuickSort(array, b + 1, r);
-}
-
-int findPivot(int *array, int l, int r) {
-    if (*mode == "deterministic1")
+int findPivot(int *array, int l, int r, int m) {
+    if (mode[m] == 'a')
         return (r);
-    if (*mode == "randomized1")
+    if (mode[m] == 'c')
         return ((rand() % (r - l) + l));
     if (r - l == 1)
         return (l);
     
     int a, b, c;
 
-    switch (*mode) {
-    case "deterministic3":
+    switch (mode[m]) {
+    case 'b':
         a = l;
         b = (l + r) / 2;
         c = r;
         break;
     
-    case "randomized3":
+    case 'd':
         a = rand() % (r - l) + l;
         b = rand() % (r - l) + l;
         c = rand() % (r - l) + l;
@@ -121,32 +118,19 @@ int inPlacePartion(int *array, int l, int r, int pivot) {
     return inPlacePartion(array, l, r, pivot);
 }
 
-void quickSort(int *array) {
-    rQuickSort(array, 0, n - 1);
-    if (*Limits > 1) {
-        for (int i = 0; i < *Limits - 1; i++) {
-            insertionSort(array, i + 1);
-        }
+void rQuickSort(int *array, int l, int r, int i, int m) {
+    if (r - l >= Limits[i]) {
+        if (l >= r)
+            return ;
+        int k, a, b;
+        
+        k = findPivot(array, l, r, m);
+        swap(array, l, k);
+        a = b = inPlacePartion(array, l, r, array[l]);
+        swap(array, l, a);
+        rQuickSort(array, l, a - 1, i, m);
+        rQuickSort(array, b + 1, r, i, m);
     }
-    return ;
-}
-
-void rQuickSort(int *array, int l, int r) {
-    if (r - l >= *Limits) {
-        int k, a, b, tmp;
-
-        k = findPivot(array, l, r);
-        a = b = inPlacePartion(array, l, r, array[k]);
-        tmp = array[k];
-        array[k] = array[a];
-        array[a] = tmp;
-        inPlaceQuickSort(array, l, a - 1);
-        inPlaceQuickSort(array, b + 1, r);
-    }
-}
-
-void printCPUtime() {
-
 }
 
 void insertionSort(int *array, int idx) {
@@ -159,7 +143,7 @@ void insertionSort(int *array, int idx) {
 }
 
 int findIndexOfMedianOfThree(int a, int b, int c) {
-    return a;
+    return (a + b + c) / 3;
 }
 
 void swap(int *array, int i, int j) {

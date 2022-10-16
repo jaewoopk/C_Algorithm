@@ -12,7 +12,7 @@ void writeList(int *list);
 void downHeap(int *list, int n, int i);
 void inPlaceHeapSort(int *list, int n, int k);
 void upHeap(int *list, int i);
-
+/*
 int main(void) {
     clock_t start, end;
     int *list; // buildList로 만들어지는 1D배열인 int형 포인터 list
@@ -122,4 +122,4 @@ void upHeap(int *list, int i) { // 기존의 upHeap함수를 오름차순으로 
         list[i / 2] = tmp;
         upHeap(list, i / 2);
     }
-}
+}*/
