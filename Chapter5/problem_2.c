@@ -9,6 +9,7 @@ void printArr();
 void inPlaceQuickSort(int *array, int l, int r);
 int inPlacePartion(int *array, int l, int r, int k);
 int findPivot(int *array, int l, int r);
+void swap(int *array, int i, int j);
 
 int main(void) {
     srand(time(NULL));
@@ -34,20 +35,19 @@ void inPlaceQuickSort(int *array, int l, int r) {
     if (l >= r)
         return ;
     
-    int k, a, b, tmp;
+    int k, a, b;
 
     k = findPivot(array, l, r);
-    a = b = inPlacePartion(array, l, r, array[k]);
-    tmp = array[k];
-    array[k] = array[a];
-    array[a] = tmp;
+    swap(array, l, k);
+    a = b = inPlacePartion(array, l, r, array[l]);
+    swap(array, l, a);
     inPlaceQuickSort(array, l, a - 1);
     inPlaceQuickSort(array, b + 1, r);
 }
 
 int findPivot(int *array, int l, int r) {
-    //int q = rand() % (r - l) + l;
-    return (l);
+    int q = rand() % (r - l) + l;
+    return (q);
 }
 
 int inPlacePartion(int *array, int l, int r, int pivot) {
@@ -74,4 +74,12 @@ int inPlacePartion(int *array, int l, int r, int pivot) {
         r--;
     }
     return inPlacePartion(array, l, r, pivot);
+}
+
+void swap(int *array, int i, int j) {
+    int tmp;
+
+    tmp = array[i];
+    array[i] = array[j];
+    array[j] = tmp;
 }
