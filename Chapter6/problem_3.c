@@ -2,37 +2,31 @@
 #include <stdlib.h>
 #pragma warning(disable:4996)
 
-void rFindElement(int t, int l, int r, char *c);
+int rFindElement(int l, int r, char *c, int index);
 
 int main(void) {
-    int a, b, num;
+    int a, b, num, ans;
 
     scanf(" %d %d %d",&a,&b,&num);
     char *str = (char *)malloc(sizeof(char) * num);
 
     scanf(" %s",str);
-    rFindElement(b, a, b, str);
-    
+    ans = rFindElement(a, b, str, 0);
+    printf("%d\n",ans);
     return (0);
 }
 
-void rFindElement(int t, int l, int r, char *c) {
-    printf("%d\n", t);
-    if (l > r) {
-        return ;
+int rFindElement(int l, int r, char *str, int index) {
+    if (l >= r) {
+        return (l + r) / 2;
     }
     int mid = (l + r) / 2;
-
-    if (t == mid) {
-        printf("%d",t);
-        return ;
+    int ans = mid;
+    if (str[index] == 'Y') {
+        ans = rFindElement(mid + 1, r, str, index + 1);
     }
-    else if (*c == 'N') {
-        c++;
-        rFindElement(t, mid + 1, r, c);
+    else if (str[index] == 'N') {
+        ans = rFindElement(l, mid, str, index + 1);
     }
-    else if (*c == 'Y') {
-        c++;
-        rFindElement(t, l, mid - 1, c);
-    }
+    return ans;
 }
