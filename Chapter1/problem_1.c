@@ -21,8 +21,8 @@ void print(t_list *list);
 int main(void) {
     int n;
     scanf(" %d", &n);
-
-    t_list *list = (t_list*)malloc(sizeof(t_list*));
+    printf("%lu %lu\n",sizeof(t_node *), sizeof(t_node));
+    t_list *list = (t_list*)malloc(sizeof(t_list));
     init(list);
     for (int i = 0; i < n; i++) {
         char k;
@@ -52,8 +52,8 @@ int main(void) {
 }
 
 void init(t_list *list) {
-    t_node *head = (t_node *)malloc(sizeof(t_node *));
-    t_node *tail = (t_node *)malloc(sizeof(t_node *));
+    t_node *head = (t_node *)malloc(sizeof(t_node));
+    t_node *tail = (t_node *)malloc(sizeof(t_node));
     list->head = head;
     list->tail = tail;
 
@@ -128,4 +128,13 @@ void print(t_list *list) {
     }
     printf("\n");
 }
-
+// 9
+// A 1 D
+// A 2 a
+// A 3 y
+// D 1
+// P
+// G 3
+// A 1 S
+// P
+// G 3 

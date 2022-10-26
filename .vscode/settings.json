@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "random": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "stdio.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

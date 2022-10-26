@@ -4,10 +4,12 @@
 
 void insertion(int *arr, int idx) {
 	int save = arr[idx];
-    int i;
-	for (i = idx - 1; i >= 0 && arr[i] > save; i--) {
-		arr[i + 1] = arr[i];
-	}
+    int i = idx - 1;
+
+    while (arr[i] > save && i >= 0) {
+        arr[i + 1] = arr[i];
+        i--;
+    }
     arr[i + 1] = save;
 }
 
@@ -29,5 +31,5 @@ int main(void) {
     return (0);
 }
 
-//7
-//3 73 48 31 8 11 20
+// 7
+// 3 73 48 31 8 11 20
