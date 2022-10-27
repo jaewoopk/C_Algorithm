@@ -5,7 +5,8 @@
 int rFindElement(int l, int r, char *c, int index);
 
 int main(void) {
-    int a, b, num, ans;
+	// binary search about number
+	int a, b, num, ans;
 
     scanf(" %d %d %d",&a,&b,&num);
     char *str = (char *)malloc(sizeof(char) * num);
