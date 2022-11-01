@@ -11,7 +11,7 @@ typedef struct s_node {
 } t_node;
 
 int findElement(int k);
-void insertItem(t_node *node, int k);
+void insertItem(t_node **node, int k);
 t_node *treeSearch(int k);
 void printTree(t_node *node);
 int removeElement(int k);
@@ -20,7 +20,7 @@ bool isInternal(t_node *w);
 t_node *inOrderSucc(t_node *w);
 
 int main(void) {
-	t_node *root = (t_node *)malloc(sizeof(t_node));
+	t_node *root = NULL;
     bool isRoot = true;
     char c;
     int k;
@@ -32,12 +32,7 @@ int main(void) {
         {
         case 'i' :
             scanf(" %d", &k);
-            if (isRoot) {
-                root->key = k;
-                isRoot = false;
-            }
-            printf("%p",&root);
-            insertItem(root, k);
+            insertItem(&root, k);
             break ;
         
         case 'p' :
@@ -73,17 +68,20 @@ int main(void) {
 //     }
 // }
 
-void insertItem(t_node *node, int k) {
-    if (!node) {
+void insertItem(t_node **node, int k) {
+    if (!(*node)) {
+        t_node *newNode = (t_node *)malloc(sizeof(t_node));
+        newNode->key = k;
+        *node = newNode;
         return ;
     }
-    if (node->key < k) {
-        insertItem(node->rChild, k);
-        node->rChild->parent = node;
+    if ((*node)->key < k) {
+        insertItem(&((*node)->rChild), k);
+        (*node)->rChild->parent = *node;
     }
-    else if (node->key > k){
-        insertItem(node->lChild, k);
-        node->lChild->parent = node;
+    else if ((*node)->key > k){
+        insertItem(&((*node)->lChild), k);
+        (*node)->lChild->parent = *node;
     }
     else {
         return ;
@@ -92,7 +90,6 @@ void insertItem(t_node *node, int k) {
 
 void printTree(t_node *node) {
     if (!node) {
-        printf("nothing\n");
         return ;
     }
     else {
