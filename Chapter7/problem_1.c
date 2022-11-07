@@ -12,11 +12,11 @@ typedef struct s_node {
 
 int findElement(int k);
 void insertItem(t_node **node, int k);
-t_node *treeSearch(int k);
+t_node *treeSearch(t_node *node, int k);
 void printTree(t_node *node);
-int removeElement(int k);
+int removeElement(t_node *node, int k);
 bool isExternal(t_node *w);
-bool isInternal(t_node *w);
+// bool isInternal(t_node *w);
 t_node *inOrderSucc(t_node *w);
 
 int main(void) {
@@ -34,9 +34,29 @@ int main(void) {
             scanf(" %d", &k);
             insertItem(&root, k);
             break ;
-        
+        case 'd' :
+            scanf(" %d", &k);
+            int tmps = removeElement(root, k);
+            if (tmps == -1) {
+                printf("X\n");
+            }
+            else {
+                printf("%d\n",tmps);
+            }
+            break ;
+        case 's' :
+            scanf(" %d", &k);
+            t_node *tmp = treeSearch(root, k);
+            if (isExternal(tmp)) {
+                printf("X\n");
+            }
+            else {
+                printf("%d\n",tmp->key);
+            }
+            break ;
         case 'p' :
             printTree(root);
+            printf("\n");
             break ;
         case 'q' :
             quit = false;
@@ -53,20 +73,28 @@ int main(void) {
 //     t_node *w = treeSearch(root, k);
 // }
 
-// t_node *treeSearch(t_node *node, int k) {
-//     if (isExternal(node)) {
-//         return node;
-//     }
-//     if (k == node->key) {
-//         return node;
-//     }
-//     else if (k < node->key) {
-//         return treeSearch(node->lChild, k);
-//     }
-//     else if (k > node->key) {
-//         return treeSearch(node->rChild, k);
-//     }
-// }
+bool isExternal(t_node *w) {
+    if (!w) {
+        return true;
+    }
+    return false;
+}
+
+t_node *treeSearch(t_node *node, int k) {
+    if (isExternal(node)) {
+        return node;
+    }
+    if (k == node->key) {
+        return node;
+    }
+    else if (k < node->key) {
+        return treeSearch(node->lChild, k);
+    }
+    else if (k > node->key) {
+        return treeSearch(node->rChild, k);
+    }
+    return node;
+}
 
 void insertItem(t_node **node, int k) {
     if (!(*node)) {
@@ -97,4 +125,35 @@ void printTree(t_node *node) {
         printTree(node->lChild);
         printTree(node->rChild);
     }
+}
+
+int removeElement(t_node *node, int k) {
+    t_node *w = treeSearch(node, k);
+    t_node *tmp_w;
+    if (isExternal(w)) {
+        return -1;
+    }
+    tmp_w = w->lChild;
+    if (!isExternal(tmp_w)) {
+        tmp_w = w->rChild;
+    }
+    if (isExternal(tmp_w)) {
+        return k;
+    }
+    else {
+        t_node *y = inOrderSucc(w);
+        tmp_w = y->lChild;
+        w->key = y->key;
+    }
+    return k;
+}
+t_node* inOrderSucc(t_node* w) {
+	t_node* tmp = w->rChild;
+
+	if (isExternal(tmp))
+		return tmp;
+	while (tmp->lChild) {
+        tmp = tmp->lChild;
+    }
+	return tmp;
 }
