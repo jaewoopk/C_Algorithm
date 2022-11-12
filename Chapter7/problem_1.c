@@ -137,16 +137,39 @@ int removeElement(t_node *node, int k) {
     if (!isExternal(tmp_w)) {
         tmp_w = w->rChild;
     }
+    else {
+        if (isExternal(w->rChild)) {
+            if (w->parent->lChild) {
+                if (w->parent->lChild->key == k)
+                    w->parent->lChild = NULL;
+            }
+            else if (w->parent->rChild) {
+                if (w->parent->rChild->key == k)
+                    w->parent->rChild = NULL;
+            }
+            return k;
+        }
+    }
     if (isExternal(tmp_w)) {
-        return k;
+        if (tmp_w == w->rChild) {
+            w->key = w->lChild->key;
+            w->lChild = NULL;
+            return k;
+        }
+        else {
+            w->key = w->rChild->key;
+            w->rChild = NULL;
+            return k;
+        }
     }
     else {
         t_node *y = inOrderSucc(w);
-        tmp_w = y->lChild;
         w->key = y->key;
+        removeElement(y, y->key);
     }
     return k;
 }
+
 t_node* inOrderSucc(t_node* w) {
 	t_node* tmp = w->rChild;
 
