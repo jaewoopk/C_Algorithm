@@ -15,6 +15,7 @@ void changeWeight(t_node **node, int a, int b, int w);
 void eraseWeight(t_node **node, int a, int b);
 
 int main(void) {
+	// solve with linked list and use graph algorithm
     t_node *list[7];
     for (int i = 0; i < 7; i++) {
         list[i] = (t_node *)malloc(sizeof(t_node));
