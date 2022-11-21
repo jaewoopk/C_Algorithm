@@ -125,13 +125,36 @@ void changeWeight(t_node **node, int a, int b, int w) {
         before_tmp2 = tmp2;
         tmp2 = tmp2->next;
     }
+
     if (!tmp1 || !tmp2) {
         if (!tmp1 && tmp2) {
-            tmp2->weight = w;
+            if (tmp2->vertex == a) {
+                tmp2->weight = w;
+            }
+            else {
+                t_node *newNode2 = (t_node *)malloc(sizeof(t_node));
+
+                newNode2->vertex = a;
+                newNode2->weight = w;
+                newNode2->next = tmp2;
+                
+                before_tmp2->next = newNode2;
+            }
             insertNode(before_tmp1, b, w);
         }
         else if (!tmp2 && tmp1) {
-            tmp1->weight = w;
+            if (tmp1->vertex == b) {
+                tmp1->weight = w;
+            }
+            else {
+                t_node *newNode1 = (t_node *)malloc(sizeof(t_node));
+
+                newNode1->vertex = b;
+                newNode1->weight = w;
+                newNode1->next = tmp1;
+
+                before_tmp1->next = newNode1;
+            }
             insertNode(before_tmp2, a, w);
         }
         else if (!tmp1 && !tmp2){
@@ -141,23 +164,27 @@ void changeWeight(t_node **node, int a, int b, int w) {
         return ;
     }
     else {
-        tmp1->weight = w;
-        tmp2->weight = w;
+        if (tmp1->vertex == b && tmp2->vertex == a) {
+            tmp1->weight = w;
+            tmp2->weight = w;
+        }
+        
+        else {
+            t_node *newNode1 = (t_node *)malloc(sizeof(t_node));
+            t_node *newNode2 = (t_node *)malloc(sizeof(t_node));
+
+            newNode1->vertex = b;
+            newNode1->weight = w;
+            newNode1->next = tmp1;
+
+            newNode2->vertex = a;
+            newNode2->weight = w;
+            newNode2->next = tmp2;
+
+            before_tmp1->next = newNode1;
+            before_tmp2->next = newNode2;
+        }
     }
-
-    // t_node *newNode1 = (t_node *)malloc(sizeof(t_node));
-    // t_node *newNode2 = (t_node *)malloc(sizeof(t_node));
-
-    // newNode1->vertex = b;
-    // newNode1->weight = w;
-    // newNode1->next = tmp1;
-
-    // newNode2->vertex = a;
-    // newNode2->weight = w;
-    // newNode2->next = tmp2;
-
-    // before_tmp1->next = newNode1;
-    // before_tmp2->next = newNode2;
 
 }
 
