@@ -16,6 +16,7 @@ int n, m, s;
 int arr[101];
 int Queue[101];
 int count;
+int finding;
 
 int main(void) {
     for (int i = 0; i < 101; i++) {
@@ -108,13 +109,13 @@ void BFS(t_node **list, int k) {
             continue;
         }
         printf("%d\n", node->next->vertex);
-        Queue[count++] = node->next->vertex;
+        Queue[++count] = node->next->vertex;
         arr[node->next->vertex] = 1;
         node = node->next;
     }
     node = list[k];
-    for (int i = 0; i < list[k]->length; i++) {
-        BFS(list, node->next->vertex);
-        node = node->next;
+    if (count != finding) {
+        BFS(list, Queue[finding]);
+        Queue[++finding] = 0;
     }
 }
