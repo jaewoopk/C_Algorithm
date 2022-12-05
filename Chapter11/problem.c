@@ -5,14 +5,13 @@
 typedef struct Node {
     int data;
     struct Node *next;
-}Node;
- 
- 
+} Node;
+
 typedef struct Queue {
     Node *front;
     Node *rear; 
     int count; 
-}Queue;
+} Queue;
 
 typedef struct s_node {
     char ch;
@@ -23,23 +22,23 @@ typedef struct s_node {
 } t_node;
 
 t_node *list;
-Queue q;
+Queue Q;
 int n, m;
 char *T;
 int tIndex;
 
-void initGraph();
-void buildGraph();
-void topologicalSort();
-void initQueue(Queue *q);
-int isEmpty(Queue *q);
-void enqueue(Queue *q, int data);
-int dequeue(Queue *q);
+void    initGraph();
+void    buildGraph();
+void    topologicalSort();
+void    initQueue();
+int     isEmpty();
+void    enqueue(int data);
+int     dequeue();
 
 int main(void) {
     int i;
  
-    initQueue(&q);
+    initQueue();
     scanf(" %d",&n);
     list = (t_node *)malloc(sizeof(t_node) * n);
     T = (char *)malloc(sizeof(char) * n);
@@ -49,13 +48,13 @@ int main(void) {
     buildGraph();
 
     topologicalSort();
-    for (int i = 0; i < n; i++) {
-        printf("%c ",list[i].ch);
-        printf("--> %s \n",list[i].next);
-    }
-    printf("\n");
+    // for (int i = 0; i < n; i++) {
+    //     printf("%c ",list[i].ch);
+    //     printf("--> %s \n",list[i].next);
+    // }
+    // printf("\n");
 
-    if (tIndex != n) {
+    if (tIndex < n) {
         printf("0\n");
         exit(0);
     }
@@ -70,7 +69,7 @@ int main(void) {
 void initGraph() {
     for (int i = 0; i < n; i++) {
         scanf(" %c",&(list[i].ch));
-        list[i].next = (char *)malloc(sizeof(char) * 10);
+        list[i].next = (char *)malloc(sizeof(char) * 100);
         list[i].index = 0;
         list[i].inDegree = 0;
         list[i].visit = false;
@@ -97,56 +96,56 @@ void buildGraph() {
 }
 
 void topologicalSort() {
-    int count = 0;
     for (int i = 0; i < n; i++) {
         if (list[i].inDegree == 0 && !list[i].visit) {
-            enqueue(&q, list[i].ch);
-            //T[tIndex++] = list[i].ch;
+            enqueue(i);
             list[i].visit = true;
-            for (int j = 0; j < list[i].index; j++) {
-                list[(list[i].next)[j] - 'A'].inDegree--;
-            }
         }
-        else
-            count++;
     }
-    printf(" %d\n",dequeue(&q));
-    if (count == n) {
-        return;
+    while (!isEmpty()) {
+        int u = dequeue();
+        T[tIndex++] = list[u].ch;
+        for (int j = 0; j < list[u].index; j++) {
+            list[list[u].next[j]].inDegree--;
+            if (list[list[u].next[j]].inDegree == 0 && !list[(list[u].next)[j]].visit)
+                enqueue(list[u].next[j]);
+                list[u].visit = true;
+        }
     }
+    return ;
 }
 
-void initQueue(Queue *q) {
-    q->front = q->rear = NULL; 
-    q->count = 0;
+void initQueue() {
+    Q.front = Q.rear = NULL; 
+    Q.count = 0;
 }
  
-int isEmpty(Queue *q) {
-    return (q->count == 0);
+int isEmpty() {
+    return (Q.count == 0);
 }
 
-void enqueue(Queue *q, int data) {
+void enqueue(int data) {
     Node *newNode = (Node *)malloc(sizeof(Node));
     newNode->data = data;
     newNode->next = NULL;
  
-    if (isEmpty(q))
-        q->front = newNode;
+    if (isEmpty())
+        Q.front = newNode;
     else
-        q->rear->next = newNode;
-    q->rear = newNode;
-    q->count++;
+        Q.rear->next = newNode;
+    Q.rear = newNode;
+    Q.count++;
 }
  
-int dequeue(Queue *q) {
+int dequeue() {
     int data;
     Node *p;
-    if (isEmpty(q))
+    if (isEmpty())
         return (0);
-    p = q->front;
+    p = Q.front;
     data = p->data;
-    q->front = p->next;
-    q->count--;
+    Q.front = p->next;
+    Q.count--;
     free(p);
     
     return (data);
