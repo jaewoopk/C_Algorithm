@@ -8,7 +8,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "program": "${workspaceFolder}/Chapter11/a.out",
+            "program": "${workspaceFolder}/a.exe",
             "args": [],
             "cwd": "${workspaceFolder}"
         }
