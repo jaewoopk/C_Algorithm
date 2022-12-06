@@ -16,6 +16,7 @@ typedef struct Queue {
 typedef struct s_node {
     char ch;
     char *next;
+    int *vertex;
     int index;
     int inDegree;
     bool visit;
@@ -29,6 +30,7 @@ int tIndex;
 
 void    initGraph();
 void    buildGraph();
+int     findVertex(char end);
 void    topologicalSort();
 void    initQueue();
 int     isEmpty();
@@ -69,6 +71,7 @@ int main(void) {
 void initGraph() {
     for (int i = 0; i < n; i++) {
         scanf(" %c",&(list[i].ch));
+        list[i].vertex = (int *)malloc(sizeof(int) * 100);
         list[i].next = (char *)malloc(sizeof(char) * 100);
         list[i].index = 0;
         list[i].inDegree = 0;
@@ -84,8 +87,10 @@ void buildGraph() {
             if (list[j].ch == start) {
                 for (int k = list[j].index; k > 0; k--) {
                     list[j].next[k] = list[j].next[k - 1];
+                    list[j].vertex[k] = list[j].vertex[k - 1];
                 }
                 list[j].next[0] = end;
+                list[j].vertex[0] = findVertex(end);
                 (list[j].index)++;
             }
             else if (list[j].ch == end) {
@@ -95,6 +100,14 @@ void buildGraph() {
     }
 }
 
+int findVertex(char end) {
+    for (int i = 0; i < n; i++) {
+        if (list[i].ch == end) {
+            return (i);
+        }
+    }
+    return 0;
+}
 void topologicalSort() {
     for (int i = 0; i < n; i++) {
         if (list[i].inDegree == 0 && !list[i].visit) {
@@ -106,9 +119,9 @@ void topologicalSort() {
         int u = dequeue();
         T[tIndex++] = list[u].ch;
         for (int j = 0; j < list[u].index; j++) {
-            list[list[u].next[j]].inDegree--;
-            if (list[list[u].next[j]].inDegree == 0 && !list[(list[u].next)[j]].visit)
-                enqueue(list[u].next[j]);
+            list[list[u].vertex[j]].inDegree--;
+            if (list[list[u].vertex[j]].inDegree == 0 && !list[list[u].vertex[j]].visit)
+                enqueue(list[u].vertex[j]);
                 list[u].visit = true;
         }
     }
