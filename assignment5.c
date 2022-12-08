@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define INFINITE 210000000
+#define INFINITE 9999999
+#define VERTEXES 6
 
 typedef struct s_node {
     struct s_node *next;
@@ -10,7 +11,6 @@ typedef struct s_node {
     int index;
     int vertex;
     int weight;
-    bool visit;
 } t_node;
 
 typedef struct Node {
@@ -25,6 +25,10 @@ typedef struct Queue {
 } Queue;
 
 Queue Q;
+t_node *list[VERTEXES + 1];
+int distance[VERTEXES + 1];
+
+int s, t;
 
 void    initQueue();
 int     isEmpty();
@@ -33,10 +37,13 @@ int     dequeue();
 void    insertNode(t_node *node, int v, int w);
 void    insertAllNode(t_node **list);
 
+void    initDistance();
+void    Dijkstra(int s);
+
 int main(void) {
     initQueue();
-    t_node *list[7];
-    for (int i = 0; i < 7; i++) {
+    initDistance();
+    for (int i = 0; i < VERTEXES + 1; i++) {
         list[i] = (t_node *)malloc(sizeof(t_node));
         if (i > 0) {
             list[i]->ch = 'A' + i - 1;
@@ -44,6 +51,20 @@ int main(void) {
         }
     }
     insertAllNode(list);
+
+    char startC, targetC;
+    scanf(" %c %c",&startC, &targetC);
+
+    for (int i = 1; i < VERTEXES + 1; i++) {
+        if (list[i]->ch == startC) {
+            s = i;
+        }
+        else if (list[i]->ch == targetC) {
+            t = i;
+        }
+    }
+    Dijkstra(s);
+    printf("%c, %c : 최단거리 = %d, 최단경로 수 = ",startC, targetC, distance[t]);
     exit(0);
     return (0);
 }
@@ -121,22 +142,38 @@ void insertAllNode(t_node **list) {
 
 }
 
-// void topologicalSort() {
-//     for (int i = 0; i < n; i++) {
-//         if (list[i].inDegree == 0 && !list[i].visit) {
-//             enqueue(i);
-//             list[i].visit = true;
-//         }
-//     }
-//     while (!isEmpty()) {
-//         int u = dequeue();
-//         T[tIndex++] = list[u].ch;
-//         for (int j = 0; j < list[u].index; j++) {
-//             list[list[u].vertex[j]].inDegree--;
-//             if (list[list[u].vertex[j]].inDegree == 0 && !list[list[u].vertex[j]].visit)
-//                 enqueue(list[u].vertex[j]);
-//                 list[u].visit = true;
-//         }
-//     }
-//     return ;
-// }
+void initDistance() {
+    for (int i = 1; i < VERTEXES + 1; i++) {
+        distance[i] = INFINITE;
+    }
+}
+
+void Dijkstra(int s) {
+    int min = INFINITE;
+    distance[s] = 0;
+    t_node *tmp = list[s];
+    while (!tmp) {
+        if (min > tmp->weight) min = tmp->weight;
+        distance[tmp->vertex] = tmp->weight;
+        enqueue(tmp->vertex);
+        tmp = tmp->next;
+    }
+
+    while(!isEmpty()) {
+        int d = dequeue();
+        tmp = list[d];
+        if (min < tmp->weight) {
+            enqueue(d);
+            continue;
+        }
+        int dWeight = tmp->weight;
+        while(!tmp) {
+            if (tmp->vertex == s || tmp->vertex == d) tmp = tmp->next;
+            if (distance[tmp->vertex] > tmp->weight + dWeight) {
+                distance[tmp->vertex] = tmp->weight + dWeight;
+                enqueue(tmp->vertex);
+            }
+        }
+
+    }
+}
