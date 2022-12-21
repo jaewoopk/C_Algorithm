@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+// 그래프순회 dfs, bfs
+
 typedef struct s_node {
     struct s_node *next;
     int vertex;

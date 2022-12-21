@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+// 그래프
+
 typedef struct s_node {
     struct s_node *next;
     int vertex;

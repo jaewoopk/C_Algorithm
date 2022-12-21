@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+//
+
 #define INFINITE 99999
 
 typedef struct s_node {
